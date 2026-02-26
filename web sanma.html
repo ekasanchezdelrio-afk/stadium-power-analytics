@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StadiumPower Analytics | Energy from Passion</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+--primary: #FFC107;
+--primary-dark: #FF9800;
+--secondary: #2196F3;
+--success: #4CAF50;
+--danger: #F44336;
+--warning: #FF9800;
+--dark: #1A1A1A;
+--gray-900: #121212;
+--gray-800: #1E1E1E;
+--gray-700: #2D2D2D;
+--gray-600: #3D3D3D;
+--gray-500: #4D4D4D;
+--gray-400: #666;
+--gray-300: #888;
+--gray-200: #B0B0B0;
+--gray-100: #E0E0E0;
+--white: #FFFFFF;
+--shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
+--shadow-md: 0 4px 16px rgba(0,0,0,0.25);
+--shadow-lg: 0 8px 32px rgba(0,0,0,0.35);
+--shadow-xl: 0 16px 48px rgba(0,0,0,0.45);
+--border-radius-sm: 8px;
+--border-radius-md: 12px;
+--border-radius-lg: 16px;
+--border-radius-xl: 24px;
+--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+color: var(--white);
+line-height: 1.6;
+overflow-x: hidden;
+}
+/* NAVBAR */
+.navbar {
+background: rgba(30, 30, 30, 0.95);
+backdrop-filter: blur(10px);
+padding: 1rem 2rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+position: sticky;
+top: 0;
+z-index: 1000;
+box-shadow: var(--shadow-md);
+border-bottom: 1px solid rgba(255, 193, 7, 0.1);
+}
+.logo {
+display: flex;
+align-items: center;
+gap: 12px;
+font-size: 1.5rem;
+font-weight: 800;
+color: var(--primary);
+text-decoration: none;
+}
+.logo-icon {
+font-size: 2rem;
+animation: pulseLogo 2s infinite;
+background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+@keyframes pulseLogo {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.1); }
+}
+.nav-links {
+display: flex;
+gap: 2rem;
+}
+.nav-links a {
+color: var(--gray-200);
+text-decoration: none;
+font-weight: 500;
+font-size: 0.95rem;
+transition: var(--transition);
+position: relative;
+padding: 0.5rem 0;
+}
+.nav-links a:hover {
+color: var(--primary);
+}
+.nav-links a::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+width: 0;
+height: 2px;
+background: var(--primary);
+transition: var(--transition);
+}
+.nav-links a:hover::after {
+width: 100%;
+}
+.cta-button {
+background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+color: var(--dark);
+padding: 0.75rem 1.5rem;
+border-radius: var(--border-radius-sm);
+font-weight: 700;
+text-decoration: none;
+transition: var(--transition);
+border: none;
+cursor: pointer;
+box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+display: inline-flex;
+align-items: center;
+gap: 8px;
+}
+.cta-button:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+}
+.cta-button i {
+font-size: 1.1rem;
+}
+/* HERO SECTION */
+.hero {
+padding: 4rem 2rem;
+text-align: center;
+background: linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(45, 45, 45, 0.9) 100%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a1a"/><path d="M0 50 L100 50 M50 0 L50 100" stroke="%232d2d2d" stroke-width="1"/></svg>');
+background-size: cover;
+position: relative;
+overflow: hidden;
+}
+.hero::before {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(circle, rgba(255, 193, 7, 0.05) 0%, transparent 70%);
+animation: rotate 20s linear infinite;
+}
+@keyframes rotate {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+.hero-badge {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+background: rgba(255, 193, 7, 0.15);
+color: var(--primary);
+padding: 0.5rem 1rem;
+border-radius: 20px;
+font-size: 0.9rem;
+font-weight: 600;
+margin-bottom: 1.5rem;
+border: 1px solid rgba(255, 193, 7, 0.2);
+}
+.hero h1 {
+font-size: 3.5rem;
+font-weight: 800;
+margin-bottom: 1rem;
+background: linear-gradient(135deg, var(--white) 0%, var(--primary) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+line-height: 1.2;
+}
+.hero p {
+font-size: 1.25rem;
+color: var(--gray-200);
+max-width: 700px;
+margin: 0 auto 2rem;
+}
+.stats-highlight {
+display: flex;
+justify-content: center;
+gap: 3rem;
+margin-top: 2rem;
+}
+.stat-item {
+text-align: center;
+}
+.stat-number {
+font-size: 2.5rem;
+font-weight: 800;
+background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.stat-label {
+font-size: 0.9rem;
+color: var(--gray-300);
+font-weight: 500;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+/* MAIN CONTAINER */
+.container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 2rem;
+}
+/* SECTION TITLE */
+.section-title {
+text-align: center;
+margin-bottom: 3rem;
+}
+.section-title h2 {
+font-size: 2.5rem;
+font-weight: 700;
+margin-bottom: 1rem;
+background: linear-gradient(135deg, var(--white) 0%, var(--primary) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.section-title p {
+color: var(--gray-300);
+font-size: 1.1rem;
+max-width: 600px;
+margin: 0 auto;
+}
+/* STADIUM LAYOUT */
+.stadium-section {
+background: rgba(30, 30, 30, 0.6);
+padding: 3rem 0;
+margin: 3rem 0;
+border-radius: var(--border-radius-lg);
+border: 1px solid rgba(255, 193, 7, 0.1);
+}
+.stadium-grid {
+display: grid;
+grid-template-columns: 1fr 2fr 1fr;
+gap: 2rem;
+margin-bottom: 2rem;
+}
+.zone-card {
+background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
+border-radius: var(--border-radius-lg);
+padding: 2rem;
+text-align: center;
+box-shadow: var(--shadow-md);
+transition: var(--transition);
+border: 2px solid transparent;
+position: relative;
+overflow: hidden;
+}
+.zone-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 4px;
+background: var(--primary);
+transform: scaleX(0);
+transform-origin: left;
+transition: var(--transition);
+}
+.zone-card:hover {
+transform: translateY(-8px);
+box-shadow: var(--shadow-xl);
+}
+.zone-card:hover::before {
+transform: scaleX(1);
+}
+.zone-east { border-left: 4px solid var(--danger); }
+.zone-west { border-left: 4px solid var(--secondary); }
+.zone-field { border-left: 4px solid var(--success); }
+.zone-badge {
+display: inline-block;
+padding: 0.4rem 1rem;
+background: rgba(255, 193, 7, 0.15);
+color: var(--primary);
+border-radius: 20px;
+font-size: 0.85rem;
+font-weight: 600;
+margin-bottom: 1rem;
+border: 1px solid rgba(255, 193, 7, 0.2);
+}
+.zone-title {
+font-size: 1.5rem;
+font-weight: 700;
+margin-bottom: 1rem;
+color: var(--white);
+}
+.energy-display {
+font-size: 3.5rem;
+font-weight: 800;
+margin: 1rem 0;
+background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.energy-unit {
+font-size: 1rem;
+color: var(--gray-300);
+font-weight: 500;
+}
+.zone-desc {
+color: var(--gray-300);
+font-size: 0.95rem;
+margin-bottom: 1.5rem;
+}
+.performance-meter {
+background: rgba(255, 193, 7, 0.05);
+border-radius: 100px;
+padding: 0.5rem;
+margin-bottom: 1rem;
+border: 1px solid rgba(255, 193, 7, 0.1);
+}
+.performance-bar {
+height: 10px;
+background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+border-radius: 5px;
+transition: width 0.5s ease;
+}
+.performance-label {
+display: flex;
+justify-content: space-between;
+font-size: 0.85rem;
+color: var(--gray-300);
+}
+/* CHART SECTION */
+.chart-section {
+background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
+border-radius: var(--border-radius-lg);
+padding: 2.5rem;
+margin: 3rem 0;
+box-shadow: var(--shadow-lg);
+border: 1px solid rgba(255, 193, 7, 0.1);
+}
+.chart-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1.5rem;
+flex-wrap: wrap;
+gap: 1rem;
+}
+.chart-title {
+font-size: 1.5rem;
+font-weight: 700;
+color: var(--white);
+}
+.chart-controls {
+display: flex;
+gap: 0.5rem;
+}
+.chart-btn {
+background: rgba(255, 193, 7, 0.1);
+border: 1px solid rgba(255, 193, 7, 0.2);
+color: var(--gray-200);
+padding: 0.5rem 1rem;
+border-radius: var(--border-radius-sm);
+cursor: pointer;
+transition: var(--transition);
+font-size: 0.9rem;
+font-weight: 500;
+}
+.chart-btn:hover, .chart-btn.active {
+background: var(--primary);
+color: var(--dark);
+border-color: var(--primary);
+}
+.chart-container {
+position: relative;
+height: 400px;
+width: 100%;
+}
+/* STATS GRID */
+.stats-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 1.5rem;
+margin: 3rem 0;
+}
+.stat-card {
+background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
+border-radius: var(--border-radius-lg);
+padding: 1.5rem;
+text-align: center;
+box-shadow: var(--shadow-md);
+transition: var(--transition);
+border: 1px solid rgba(255, 193, 7, 0.05);
+}
+.stat-card:hover {
+transform: translateY(-4px);
+box-shadow: var(--shadow-lg);
+border-color: rgba(255, 193, 7, 0.2);
+}
+.stat-icon {
+font-size: 2.5rem;
+margin-bottom: 1rem;
+background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.stat-value {
+font-size: 2rem;
+font-weight: 800;
+margin: 0.5rem 0;
+background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.stat-label {
+font-size: 0.9rem;
+color: var(--gray-300);
+font-weight: 500;
+}
+/* INFO SECTION */
+.info-section {
+background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
+border-radius: var(--border-radius-lg);
+padding: 3rem;
+margin: 3rem 0;
+box-shadow: var(--shadow-lg);
+border: 1px solid rgba(255, 193, 7, 0.1);
+}
+.info-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 3rem;
+}
+.info-content h3 {
+font-size: 1.8rem;
+font-weight: 700;
+margin-bottom: 1.5rem;
+color: var(--primary);
+}
+.info-content p {
+color: var(--gray-200);
+line-height: 1.8;
+margin-bottom: 1rem;
+}
+.highlight-text {
+color: var(--primary);
+font-weight: 700;
+}
+.equivalents-list {
+list-style: none;
+margin-top: 1.5rem;
+}
+.equivalents-list li {
+padding: 0.75rem 0;
+border-bottom: 1px solid rgba(255, 193, 7, 0.1);
+color: var(--gray-200);
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.equivalents-list li::before {
+content: '⚡';
+font-size: 1.2rem;
+}
+.quote-box {
+background: rgba(255, 193, 7, 0.05);
+border-left: 4px solid var(--primary);
+padding: 1.5rem;
+border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+margin-top: 2rem;
+}
+.quote-text {
+font-style: italic;
+font-size: 1.1rem;
+color: var(--primary);
+font-weight: 600;
+}
+/* FOOTER */
+.footer {
+background: rgba(20, 20, 20, 0.95);
+padding: 3rem 2rem;
+text-align: center;
+border-top: 1px solid rgba(255, 193, 7, 0.1);
+}
+.footer-logo {
+font-size: 1.8rem;
+font-weight: 800;
+color: var(--primary);
+margin-bottom: 1rem;
+}
+.footer-text {
+color: var(--gray-300);
+font-size: 0.95rem;
+max-width: 600px;
+margin: 0 auto;
+}
+.footer-links {
+display: flex;
+justify-content: center;
+gap: 1.5rem;
+margin: 1.5rem 0;
+}
+.footer-links a {
+color: var(--gray-300);
+text-decoration: none;
+transition: var(--transition);
+}
+.footer-links a:hover {
+color: var(--primary);
+}
+/* TIMELINE SECTION */
+.timeline-section {
+background: rgba(30, 30, 30, 0.6);
+padding: 3rem 0;
+margin: 3rem 0;
+border-radius: var(--border-radius-lg);
+border: 1px solid rgba(255, 193, 7, 0.1);
+}
+.timeline-title {
+text-align: center;
+margin-bottom: 2rem;
+color: var(--primary);
+font-size: 2rem;
+}
+.timeline {
+max-width: 1200px;
+margin: 0 auto;
+position: relative;
+}
+.timeline::before {
+content: '';
+position: absolute;
+top: 0;
+bottom: 0;
+left: 50%;
+width: 2px;
+background: var(--primary);
+transform: translateX(-50%);
+}
+.timeline-item {
+display: flex;
+min-height: 200px;
+margin-bottom: 3rem;
+position: relative;
+}
+.timeline-item:nth-child(odd) {
+flex-direction: row;
+}
+.timeline-item:nth-child(even) {
+flex-direction: row-reverse;
+}
+.timeline-content {
+width: 45%;
+background: var(--gray-700);
+border-radius: var(--border-radius-md);
+padding: 1.5rem;
+box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+border-left: 4px solid var(--primary);
+}
+.timeline-time {
+font-weight: 600;
+color: var(--primary);
+margin-bottom: 0.5rem;
+font-size: 1.1rem;
+}
+.timeline-title {
+font-weight: 600;
+margin-bottom: 0.3rem;
+color: var(--white);
+}
+.timeline-description {
+color: var(--gray-300);
+font-size: 0.95rem;
+}
+.timeline-dot {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background: var(--primary);
+border: 3px solid var(--dark);
+z-index: 2;
+}
+.timeline-image {
+width: 100%;
+height: 150px;
+border-radius: var(--border-radius-md);
+object-fit: cover;
+margin-bottom: 1rem;
+background: linear-gradient(45deg, var(--gray-600), var(--gray-700));
+}
+@media (max-width: 768px) {
+.timeline::before {
+left: 30px;
+}
+.timeline-item {
+flex-direction: column;
+}
+.timeline-content {
+width: 100%;
+margin: 0 0 1rem 60px;
+}
+.timeline-dot {
+left: 30px;
+}
+}
+/* MODAL STYLES */
+.modal {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7);
+z-index: 1000;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+.modal-content {
+background: var(--gray-800);
+border-radius: var(--border-radius-lg);
+width: 100%;
+max-width: 600px;
+box-shadow: var(--shadow-xl);
+border: 1px solid rgba(255, 193, 7, 0.2);
+}
+.modal-header {
+padding: 1.5rem;
+border-bottom: 1px solid rgba(255, 193, 7, 0.1);
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.modal-title {
+font-size: 1.5rem;
+font-weight: 700;
+color: var(--primary);
+}
+.close-modal {
+background: none;
+border: none;
+color: var(--gray-300);
+font-size: 1.5rem;
+cursor: pointer;
+transition: var(--transition);
+}
+.close-modal:hover {
+color: var(--primary);
+transform: rotate(90deg);
+}
+.modal-body {
+padding: 2rem;
+}
+.form-group {
+margin-bottom: 1.5rem;
+}
+.form-group label {
+display: block;
+margin-bottom: 0.5rem;
+color: var(--gray-200);
+font-weight: 500;
+}
+.form-control {
+width: 100%;
+padding: 0.8rem 1rem;
+background: var(--gray-700);
+border: 1px solid rgba(255, 193, 7, 0.2);
+border-radius: var(--border-radius-sm);
+color: var(--white);
+font-family: 'Inter', sans-serif;
+font-size: 1rem;
+transition: var(--transition);
+}
+.form-control:focus {
+outline: none;
+border-color: var(--primary);
+box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2);
+}
+.btn-submit {
+background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+color: var(--dark);
+padding: 0.8rem 1.5rem;
+border-radius: var(--border-radius-sm);
+font-weight: 600;
+border: none;
+cursor: pointer;
+width: 100%;
+font-size: 1rem;
+transition: var(--transition);
+box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+.btn-submit:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+}
+.modal-footer {
+padding: 1.5rem;
+text-align: center;
+}
+.modal-footer p {
+color: var(--gray-400);
+font-size: 0.9rem;
+}
+/* ANIMATIONS */
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(30px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.animate {
+animation: fadeInUp 0.6s ease-out forwards;
+}
+.animate:nth-child(1) { animation-delay: 0.1s; }
+.animate:nth-child(2) { animation-delay: 0.2s; }
+.animate:nth-child(3) { animation-delay: 0.3s; }
+.animate:nth-child(4) { animation-delay: 0.4s; }
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+.stadium-grid {
+grid-template-columns: 1fr;
+}
+.stats-grid {
+grid-template-columns: repeat(2, 1fr);
+}
+.info-grid {
+grid-template-columns: 1fr;
+}
+.hero h1 {
+font-size: 2.5rem;
+}
+.stat-number {
+font-size: 2rem;
+}
+}
+@media (max-width: 640px) {
+.navbar {
+flex-direction: column;
+gap: 1rem;
+padding: 1rem;
+}
+.nav-links {
+gap: 1rem;
+flex-wrap: wrap;
+justify-content: center;
+}
+.hero {
+padding: 2rem 1rem;
+}
+.hero h1 {
+font-size: 2rem;
+}
+.stats-highlight {
+gap: 1rem;
+flex-wrap: wrap;
+}
+.stat-number {
+font-size: 1.5rem;
+}
+.energy-display {
+font-size: 2.5rem;
+}
+.stats-grid {
+grid-template-columns: 1fr;
+}
+.chart-container {
+height: 300px;
+}
+}
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+<a href="#" class="logo">
+<i class="fas fa-bolt logo-icon"></i>
+<span>StadiumPower</span>
+</a>
+<div class="nav-links">
+<a href="#stadium">Estadio</a>
+<a href="#stats">Estadísticas</a>
+<a href="#info">Tecnología</a>
+<a href="#timeline">Timeline</a>
+</div>
+<button class="cta-button" id="demoBtn">
+<i class="fas fa-bolt"></i>
+Solicitar Demo
+</button>
+</nav>
+<!-- HERO SECTION -->
+<section class="hero">
+<div class="hero-badge">
+<i class="fas fa-fire"></i>
+<span>DERBI BILBAÍNO • ATHLETIC vs REAL SOCIEDAD</span>
+</div>
+<h1>Transformamos la pasión en energía limpia</h1>
+<p>StadiumPower Analytics convierte el entusiasmo de los aficionados en micro-generación eléctrica sostenible para estadios deportivos.</p>
+<div class="stats-highlight">
+<div class="stat-item">
+<div class="stat-number">165.7</div>
+<div class="stat-label">kWh generados</div>
+</div>
+<div class="stat-item">
+<div class="stat-number">3</div>
+<div class="stat-label">Goles</div>
+</div>
+<div class="stat-item">
+<div class="stat-number">53.3K</div>
+<div class="stat-label">Aficionados</div>
+</div>
+</div>
+</section>
+<!-- MAIN CONTENT -->
+<div class="container">
+<!-- STADIUM SECTION -->
+<section id="stadium" class="stadium-section">
+<div class="section-title">
+<h2>📊 Distribución Energética</h2>
+<p>Zonas del estadio y energía capturada durante el evento completo</p>
+</div>
+<div class="stadium-grid">
+<!-- GRADA ESTE -->
+<div class="zone-card zone-east animate">
+<div class="zone-badge">🔴 LOCAL</div>
+<h3 class="zone-title">Grada Este</h3>
+<div class="energy-display">40.2<span class="energy-unit"> kWh</span></div>
+<p class="zone-desc">Hinchada local más emocionada durante el derbi</p>
+<div class="performance-meter">
+<div class="performance-bar" style="width: 85%"></div>
+</div>
+<div class="performance-label">
+<span>Intensidad</span>
+<span>85%</span>
+</div>
+</div>
+<!-- TERRENO DE JUEGO -->
+<div class="zone-card zone-field animate">
+<div class="zone-badge">⚽ CAMPO</div>
+<h3 class="zone-title">Terreno de Juego</h3>
+<div class="energy-display">55.6<span class="energy-unit"> kWh</span></div>
+<p class="zone-desc">22 jugadores en constante movimiento + impactos de balón</p>
+<div class="performance-meter">
+<div class="performance-bar" style="width: 95%"></div>
+</div>
+<div class="performance-label">
+<span>Actividad</span>
+<span>95%</span>
+</div>
+</div>
+<!-- GRADA OESTE -->
+<div class="zone-card zone-west animate">
+<div class="zone-badge">🔵 VISITANTE</div>
+<h3 class="zone-title">Grada Oeste</h3>
+<div class="energy-display">37.3<span class="energy-unit"> kWh</span></div>
+<p class="zone-desc">Afición rival con alta intensidad durante todo el evento</p>
+<div class="performance-meter">
+<div class="performance-bar" style="width: 80%"></div>
+</div>
+<div class="performance-label">
+<span>Intensidad</span>
+<span>80%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- TIMELINE SECTION -->
+<section id="timeline" class="timeline-section">
+<h2 class="timeline-title">🕒 Evolución Completa del Evento (180 Minutos)</h2>
+<div class="timeline">
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">0' - 30'</div>
+<h3 class="timeline-title">Acceso de Aficionados</h3>
+<p class="timeline-description">Entrada masiva al estadio. 53.3K aficionados entrando con entusiasmo. Primeros cánticos y movimientos en accesos y gradas generan energía inicial.</p>
+<div style="margin-top: 10px; color: var(--primary); font-weight: bold;">Generado: 12.5 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">30' - 60'</div>
+<h3 class="timeline-title">Calentamiento de Jugadores</h3>
+<p class="timeline-description">Los 22 jugadores calientan intensamente en el campo. Primeros cánticos de la grada. Inicio de la captación en el césped con actividad constante.</p>
+<div style="margin-top: 10px; color: var(--primary); font-weight: bold;">Generado: 18.3 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">60' - 75'</div>
+<h3 class="timeline-title">Primer Tiempo</h3>
+<p class="timeline-description">Inicio del partido con intensidad normal. Los aficionados están expectantes. Movimiento constante en gradas y campo durante el juego.</p>
+<div style="margin-top: 10px; color: var(--primary); font-weight: bold;">Generado: 21.3 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">75' - 90'</div>
+<h3 class="timeline-title">¡GOLAZO! Máxima Emoción</h3>
+<p class="timeline-description">Gol del Athletic en el minuto 78. Salto masivo en gradas, cánticos eufóricos. Pico máximo de energía por la euforia del gol local.</p>
+<div style="margin-top: 10px; color: var(--primary); font-weight: bold;">Generado: 34.5 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">90' - 105'</div>
+<h3 class="timeline-title">Descanso</h3>
+<p class="timeline-description">Pausa en el partido. Jugadores en vestuarios. Aficionados en bares y gradas mantienen actividad reducida pero constante.</p>
+<div style="margin-top: 10px; color: var(--gray-300); font-weight: bold;">Generado: 8.2 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">105' - 120'</div>
+<h3 class="timeline-title">Segundo Tiempo</h3>
+<p class="timeline-description">Reanudación con más fuerza. Ambos equipos buscan el gol. Los aficionados mantienen el ritmo con cánticos constantes.</p>
+<div style="margin-top: 10px; color: var(--primary); font-weight: bold;">Generado: 24.8 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">120' - 135'</div>
+<h3 class="timeline-title">¡GOL! Celebración Duplicada</h3>
+<p class="timeline-description">Segundo gol del Athletic. La grada explota de nuevo. Ola mexicana por todo el estadio. Doble celebración que duplica la energía.</p>
+<div style="margin-top: 10px; color: var(--primary); font-weight: bold;">Generado: 28.5 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">135' - 150'</div>
+<h3 class="timeline-title">Minutos Finales</h3>
+<p class="timeline-description">Tensión máxima en los últimos minutos. El rival aprieta. Los aficionados no paran de animar para mantener la ventaja.</p>
+<div style="margin-top: 10px; color: var(--primary); font-weight: bold;">Generado: 20.5 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">150' - 165'</div>
+<h3 class="timeline-title">Victoria y Fiesta</h3>
+<p class="timeline-description">Pitido final. Victoria del Athletic. Celebración en gradas y campo. Cánticos de victoria y alegría por el resultado.</p>
+<div style="margin-top: 10px; color: var(--primary); font-weight: bold;">Generado: 22.7 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+<div class="timeline-item">
+<div class="timeline-content">
+<div class="timeline-time">165' - 180'</div>
+<h3 class="timeline-title">Desalojo del Estadio</h3>
+<p class="timeline-description">Salida ordenada de aficionados. Actividad decreciente gradualmente hasta el cierre completo del estadio.</p>
+<div style="margin-top: 10px; color: var(--gray-300); font-weight: bold;">Generado: 6.4 kWh</div>
+</div>
+<div class="timeline-dot"></div>
+</div>
+</div>
+</section>
+<!-- CHART SECTION -->
+<section id="stats" class="chart-section">
+<div class="chart-header">
+<h3 class="chart-title">📈 Evolución Energética - Derbi Bilbaíno</h3>
+<div class="chart-controls">
+<button class="chart-btn active">180 Minutos</button>
+<button class="chart-btn">Acceso + Calentamiento</button>
+<button class="chart-btn">Partido</button>
+<button class="chart-btn">Celebración</button>
+</div>
+</div>
+<div class="chart-container">
+<canvas id="energyChart"></canvas>
+</div>
+</section>
+<!-- STATS GRID -->
+<section class="stats-grid">
+<div class="stat-card animate">
+<i class="fas fa-bolt stat-icon"></i>
+<div class="stat-value">165.7 kWh</div>
+<div class="stat-label">Energía Total</div>
+</div>
+<div class="stat-card animate">
+<i class="fas fa-futbol stat-icon"></i>
+<div class="stat-value">3 Goles</div>
+<div class="stat-label">Picos Energéticos</div>
+</div>
+<div class="stat-card animate">
+<i class="fas fa-users stat-icon"></i>
+<div class="stat-value">53.3K</div>
+<div class="stat-label">Espectadores</div>
+</div>
+<div class="stat-card animate">
+<i class="fas fa-lightbulb stat-icon"></i>
+<div class="stat-value">28h</div>
+<div class="stat-label">Iluminación Vestuarios</div>
+</div>
+</section>
+<!-- INFO SECTION -->
+<section id="info" class="info-section">
+<div class="info-grid">
+<div class="info-content">
+<h3>⚡ Datos de Simulación - Derbi Bilbaíno</h3>
+<p>En un <span class="highlight-text">derbi</span>, la intensidad emocional y el movimiento de aficionados se incrementan un <span class="highlight-text">40%</span> respecto a un partido normal.</p>
+<p>Los <span class="highlight-text">165.7 kWh</span> generados equivalen a:</p>
+<ul class="equivalents-list">
+<li>28 horas de iluminación de vestuarios</li>
+<li>7 horas de funcionamiento de pantallas LED</li>
+<li>17% del consumo total del estadio durante el evento</li>
+<li>Reducción de 85 kg de CO₂ equivalente</li>
+</ul>
+<div class="quote-box">
+<p class="quote-text">"La pasión del derbi se convierte en energía limpia"</p>
+</div>
+</div>
+<div class="info-content">
+<h3>🔬 Tecnología Piezoeléctrica</h3>
+<p>Nuestra plataforma simula la captación de energía mediante:</p>
+<p><span class="highlight-text">• Suelos inteligentes</span> con fibras piezoeléctricas en gradas</p>
+<p><span class="highlight-text">• Césped artificial</span> con sensores de impacto en el terreno de juego</p>
+<p><span class="highlight-text">• Micrófonos direccionales</span> que capturan vibraciones acústicas</p>
+<p style="margin-top: 1.5rem;">Según estudios de la <span class="highlight-text">Universidad de Stanford</span> y el proyecto <span class="highlight-text">Feyenoord Rotterdam</span>, cada pisada humana genera aproximadamente <span class="highlight-text">2.5 Wh</span> de energía, mientras que los impactos de balón en césped artificial pueden generar hasta <span class="highlight-text">1.2 Wh</span> por contacto.</p>
+<p style="margin-top: 1rem; font-weight: 600; color: var(--primary);">
+💡 <span class="highlight-text">Nota:</span> Este es un proyecto de simulación para demostrar viabilidad técnica. La implementación real requeriría estudio de ingeniería detallado.
+</p>
+</div>
+</div>
+</section>
+</div>
+<!-- MODAL -->
+<div class="modal" id="demoModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 class="modal-title">Solicitar Demostración</h2>
+<button class="close-modal" id="closeModal">&times;</button>
+</div>
+<div class="modal-body">
+<form id="demoForm">
+<div class="form-group">
+<label for="name">Nombre completo</label>
+<input type="text" id="name" class="form-control" placeholder="Tu nombre completo" required>
+</div>
+<div class="form-group">
+<label for="email">Correo electrónico</label>
+<input type="email" id="email" class="form-control" placeholder="tu@email.com" required>
+</div>
+<div class="form-group">
+<label for="company">Empresa/Institución</label>
+<input type="text" id="company" class="form-control" placeholder="Nombre de tu empresa">
+</div>
+<div class="form-group">
+<label for="phone">Teléfono</label>
+<input type="tel" id="phone" class="form-control" placeholder="Tu número de teléfono">
+</div>
+<div class="form-group">
+<label for="message">Mensaje</label>
+<textarea id="message" class="form-control" rows="4" placeholder="¿Qué te gustaría saber?"></textarea>
+</div>
+<button type="submit" class="btn-submit">Solicitar Demo</button>
+</form>
+</div>
+<div class="modal-footer">
+<p>Tu información se mantendrá confidencial y solo se usará para contactarte.</p>
+</div>
+</div>
+</div>
+<!-- FOOTER -->
+<footer class="footer">
+<div class="footer-logo">StadiumPower Analytics</div>
+<p class="footer-text">Plataforma de simulación de micro-generación energética para estadios deportivos • Proyecto Fin de Grado SMR 2025-26</p>
+<div class="footer-links">
+<a href="#">Términos y Condiciones</a>
+<a href="#">Política de Privacidad</a>
+<a href="#">Contacto</a>
+</div>
+</footer>
+<script>
+// Initialize Chart
+const ctx = document.getElementById('energyChart').getContext('2d');
+const energyChart = new Chart(ctx, {
+type: 'line',
+data: {
+labels: ['0\'', '30\'', '60\'', '75\'', '90\'', '105\'', '120\'', '135\'', '150\'', '165\'', '180\''],
+datasets: [{
+label: 'Energía Acumulada (kWh)',
+data: [12.5, 30.8, 52.1, 86.6, 94.8, 119.6, 148.1, 168.6, 175.0, 181.4],
+borderColor: '#FFC107',
+backgroundColor: 'rgba(255, 193, 7, 0.1)',
+borderWidth: 4,
+tension: 0.3,
+fill: true,
+pointBackgroundColor: '#FF5722',
+pointBorderColor: '#FFFFFF',
+pointBorderWidth: 3,
+pointRadius: 6,
+pointHoverRadius: 8,
+pointHoverBackgroundColor: '#FF5722',
+pointHoverBorderColor: '#FFFFFF',
+pointHoverBorderWidth: 4
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+display: true,
+position: 'top',
+labels: {
+color: '#FFFFFF',
+font: { size: 14, family: 'Inter' },
+padding: 20
+}
+},
+tooltip: {
+backgroundColor: 'rgba(30, 30, 30, 0.95)',
+titleColor: '#FFC107',
+bodyColor: '#FFFFFF',
+borderColor: '#FFC107',
+borderWidth: 1,
+padding: 12,
+displayColors: false,
+callbacks: {
+label: function(context) {
+return `Energía: ${context.parsed.y} kWh`;
+},
+afterLabel: function(context) {
+const events = [
+'⚽ Acceso aficionados - 12.5 kWh',
+'🏃‍♂️ Calentamiento - 30.8 kWh',
+'⚽ Primer tiempo - 52.1 kWh',
+'🔥 ¡GOL ATHLETIC! - 86.6 kWh',
+'⏸️ Descanso - 94.8 kWh',
+'⚽ Segundo tiempo - 119.6 kWh',
+'⚽ ¡SEGUNDO GOL! - 148.1 kWh',
+'🌊 Minutos finales - 168.6 kWh',
+'🎉 Victoria - 175.0 kWh',
+'🚶 Salida - 181.4 kWh'
+];
+return events[context.dataIndex];
+}
+}
+}
+},
+scales: {
+y: {
+beginAtZero: true,
+grid: {
+color: 'rgba(255, 255, 255, 0.05)',
+borderColor: 'rgba(255, 193, 7, 0.2)'
+},
+ticks: {
+color: '#FFFFFF',
+font: { family: 'Inter' },
+stepSize: 25
+},
+title: {
+display: true,
+text: 'kWh acumulados',
+color: '#FFC107',
+font: { size: 14, family: 'Inter', weight: '600' }
+}
+},
+x: {
+grid: {
+color: 'rgba(255, 255, 255, 0.05)',
+borderColor: 'rgba(255, 193, 7, 0.2)'
+},
+ticks: {
+color: '#FFFFFF',
+font: { family: 'Inter' }
+},
+title: {
+display: true,
+text: 'Minutos del evento',
+color: '#FFC107',
+font: { size: 14, family: 'Inter', weight: '600' }
+}
+}
+},
+interaction: {
+intersect: false,
+mode: 'index'
+},
+animation: {
+duration: 2000,
+easing: 'easeOutQuart'
+}
+}
+});
+// Chart buttons functionality
+document.querySelectorAll('.chart-btn').forEach(button => {
+button.addEventListener('click', function() {
+document.querySelectorAll('.chart-btn').forEach(btn => btn.classList.remove('active'));
+this.classList.add('active');
+});
+});
+// Modal functionality
+const demoBtn = document.getElementById('demoBtn');
+const demoModal = document.getElementById('demoModal');
+const closeModal = document.getElementById('closeModal');
+const demoForm = document.getElementById('demoForm');
+demoBtn.addEventListener('click', function() {
+demoModal.style.display = 'flex';
+});
+closeModal.addEventListener('click', function() {
+demoModal.style.display = 'none';
+});
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+if (event.target === demoModal) {
+demoModal.style.display = 'none';
+}
+});
+// Form submission
+demoForm.addEventListener('submit', function(e) {
+e.preventDefault();
+alert('¡Demo solicitada con éxito! Nos pondremos en contacto contigo en las próximas 24 horas.');
+demoForm.reset();
+demoModal.style.display = 'none';
+});
+// Smooth scroll for navigation
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+const target = document.querySelector(this.getAttribute('href'));
+if (target) {
+window.scrollTo({
+top: target.offsetTop - 80,
+behavior: 'smooth'
+});
+}
+});
+});
+</script>
+</body>
+</html>
